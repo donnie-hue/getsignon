@@ -6,6 +6,6 @@
     "serve": "^14.2.3"
   },
   "scripts": {
-    "start": "serve -s . -l 0.0.0.0:3000"
+    "start": "serve -s . -l tcp://0.0.0.0:3000"
   }
 }
