@@ -104,11 +104,11 @@ $tk = issue_token();
       <div class="eyebrow">Webinar replay · Full recording now available</div>
 
       <div class="talk-title">The Discovery of a Lifetime</div>
-      <div class="talk-sub">Dr. Amara Fields shares the breakthrough she spent decades building — and the story the news couldn&rsquo;t stop covering.</div>
+      <div class="talk-sub">The breakthrough I spent decades building — and the story the news couldn&rsquo;t stop covering.</div>
 
       <div class="talk-body">
         The live session has ended. The complete recording is now available to watch.
-        Experience everything Dr. Fields revealed on stage: the discovery itself, the
+        Experience everything I revealed on stage: the discovery itself, the
         years of work behind it, and why the world is paying attention.
       </div>
 
