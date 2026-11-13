@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoom &mdash; Join a Zoom Meeting</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%232D8CFF'/%3E%3Cpath d='M9 15.5c0-1.4 1.1-2.5 2.5-2.5H22c1.4 0 2.5 1.1 2.5 2.5v9c0 1.4-1.1 2.5-2.5 2.5H11.5C10.1 26.5 9 25.4 9 24z' fill='%23fff'/%3E%3Cpath d='M27.5 18.5l6.5-4.2c.5-.3 1 .1 1 .6v10.2c0 .5-.5.9-1 .6l-6.5-4.2z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root{--zblue:#0b5cff;--zblue-d:#0847b8;--zink:#171a1f;--zmute:#5c6570;--zline:#e6e9ee;--zbg:#f6f8fa;--zgreen:#0e9f6e}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#fff;color:var(--zink);-webkit-font-smoothing:antialiased}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--zline)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:20px;color:var(--zblue);letter-spacing:-.01em}
+  .logo svg{display:block}
+  .signin{font-size:14px;color:var(--zmute);text-decoration:none;font-weight:600}
+  .signin:hover{color:var(--zink)}
+  .stage{min-height:calc(100vh - 61px);display:flex;align-items:flex-start;justify-content:center;padding:56px 20px 40px;background:#fff}
+  .card{width:100%;max-width:440px;background:#fff;border:1px solid var(--zline);border-radius:12px;box-shadow:0 6px 24px rgba(16,24,40,.06);padding:34px 34px 30px}
+  .card .zmark{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .card h1{font-size:22px;font-weight:600;margin:0 0 6px}
+  .card .sub{font-size:14px;color:var(--zmute);margin:0 0 24px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--zink);margin-bottom:7px}
+  .field .req{color:#e11d48}
+  .field input{width:100%;height:46px;border:1px solid #cfd6de;border-radius:8px;padding:0 14px;font-size:15px;color:var(--zink);background:#fff;outline:none}
+  .field input:focus{border-color:var(--zblue);box-shadow:0 0 0 3px rgba(11,92,255,.15)}
+  .field input[readonly]{background:#f6f8fa;color:var(--zmute)}
+  .btn-join{width:100%;height:48px;border:0;border-radius:8px;background:var(--zblue);color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:4px}
+  .btn-join:hover{background:var(--zblue-d)}
+  .btn-join:active{transform:translateY(1px)}
+  .legal{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--zmute);text-align:center}
+  .legal a{color:var(--zmute);text-decoration:underline}
+  .shake{animation:sh .4s}
+  @keyframes sh{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  /* connecting + meeting states */
+  .center{max-width:440px;text-align:center}
+  .spinner{width:46px;height:46px;border:4px solid #e6e9ee;border-top-color:var(--zblue);border-radius:50%;margin:0 auto 22px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .mtitle{font-size:20px;font-weight:600;margin:0 0 8px}
+  .mid{font-size:14px;color:var(--zmute);margin:0 0 4px}
+  .metting{width:100%;max-width:560px;background:#0b0f14;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+  .metting .vid{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(120% 120% at 30% 20%,#1b2530,#0b0f14)}
+  .metting .av2{width:96px;height:96px;border-radius:50%;background:var(--zblue);color:#fff;font-size:38px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .metting .who{color:#fff;font-size:18px;font-weight:600}
+  .metting .who small{display:block;color:#9aa4b2;font-size:13px;font-weight:400;margin-top:4px}
+  .metting .bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px;background:#0b0f14}
+  .metting .bar span{background:#1b2530;color:#cbd3dd;font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px}
+  .metting .bar .leave{background:#c8102e;color:#fff;border:0;font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;cursor:pointer}
+  .foot{color:#5c6570;font-size:12px;text-align:center;padding:18px 20px 26px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- EDIT: put your real Zoom link or your own destination in nextUrl below.
+     The visitor's entered name is appended as  ?name=...  to nextUrl.
+     Leave nextUrl empty ("") to stay on the in-page "meeting started" screen. -->
+<script>
+  var CONFIG = {
+    meetingId: "826 4893 1207",
+    meetingTitle: "Stay Secure in 2026",
+    host: "Elena Brooks",
+    nextUrl: ""
+  };
+  window.__capturedName = "";
+</script>
+
+<div class="topbar">
+  <span class="logo">
+    <svg width="26" height="26" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#2D8CFF"/><path d="M9 15.5c0-1.4 1.1-2.5 2.5-2.5H22c1.4 0 2.5 1.1 2.5 2.5v9c0 1.4-1.1 2.5-2.5 2.5H11.5C10.1 26.5 9 25.4 9 24z" fill="#fff"/><path d="M27.5 18.5l6.5-4.2c.5-.3 1 .1 1 .6v10.2c0 .5-.5.9-1 .6l-6.5-4.2z" fill="#fff"/></svg>
+    zoom
+  </span>
+  <a class="signin" href="javascript:void(0)" onclick="location.href='/zoom'">Sign In</a>
+</div>
+
+<!-- JOIN FORM -->
+<div class="stage" id="joinStage">
+  <div class="card" id="joinCard">
+    <div class="zmark">
+      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#2D8CFF"/><path d="M9 15.5c0-1.4 1.1-2.5 2.5-2.5H22c1.4 0 2.5 1.1 2.5 2.5v9c0 1.4-1.1 2.5-2.5 2.5H11.5C10.1 26.5 9 25.4 9 24z" fill="#fff"/><path d="M27.5 18.5l6.5-4.2c.5-.3 1 .1 1 .6v10.2c0 .5-.5.9-1 .6l-6.5-4.2z" fill="#fff"/></svg>
+    </div>
+    <h1>Join a Zoom Meeting</h1>
+    <p class="sub">Meeting ID: <b id="idShow"></b></p>
+    <div class="field">
+      <label for="name">Your full name <span class="req">*</span></label>
+      <input type="text" id="name" name="name" autocomplete="off" spellcheck="false" placeholder="Enter your name to join">
+    </div>
+    <button class="btn-join" id="joinBtn" type="button">Join</button>
+    <p class="legal">By clicking Join, you agree to Zoom's <a href="javascript:void(0)">Terms of Use</a> and <a href="javascript:void(0)">Privacy Statement</a>.</p>
+  </div>
+</div>
+
+<!-- CONNECTING STATE -->
+<div class="stage" id="connectStage" style="display:none">
+  <div class="center">
+    <div class="spinner"></div>
+    <p class="mtitle">Connecting to the meeting&hellip;</p>
+    <p class="mid" id="connectId"></p>
+    <p class="mid">Signed in as <b id="connectName"></b></p>
+  </div>
+</div>
+
+<!-- MEETING STARTED STATE (shown only if CONFIG.nextUrl is empty) -->
+<div class="stage" id="meetStage" style="display:none">
+  <div class="metting">
+    <div class="vid">
+      <div class="av2" id="mAv">EB</div>
+      <div class="who" id="mWho">Elena Brooks<small>Webinar host</small></div>
+    </div>
+    <div class="bar">
+      <span>&#128264; Mute</span>
+      <span>&#128249; Video</span>
+      <span>Participants</span>
+      <button class="leave" type="button" onclick="location.href='/zoom'">Leave</button>
+    </div>
+  </div>
+  <p class="foot">You're in the meeting. Audio is set to your default device.<br>Meeting ID: <span id="meetId"></span></p>
+</div>
+
+<script>
+(function(){
+  var nameEl=document.getElementById('name');
+  var btn=document.getElementById('joinBtn');
+  document.getElementById('idShow').textContent=CONFIG.meetingId;
+  document.getElementById('connectId').textContent="Meeting ID: "+CONFIG.meetingId;
+  document.getElementById('connectName').textContent="(you)";
+  document.getElementById('meetId').textContent=CONFIG.meetingId;
+
+  function initials(n){n=(n||"").trim();if(!n)return"??";var p=n.split(/\s+/);return((p[0][0]||"")+(p[1]?p[1][0]:"")).toUpperCase();}
+
+  btn.addEventListener('click',function(){
+    var raw=nameEl.value.trim();
+    if(!raw){
+      nameEl.classList.remove('shake');void nameEl.offsetWidth;nameEl.classList.add('shake');
+      nameEl.focus();return;
+    }
+    var nm=raw.length>60?raw.slice(0,60):raw;
+    window.__capturedName=nm;
+    try{localStorage.setItem('zoom_join_name',nm);}catch(e){}
+    document.getElementById('connectName').textContent=nm;
+    document.getElementById('mAv').textContent=initials(nm);
+    document.getElementById('mWho').innerHTML=nm.replace(/</g,"&lt;")+"<small>Webinar host: "+CONFIG.host.replace(/</g,"&lt;")+"</small>";
+    document.getElementById('joinStage').style.display='none';
+    document.getElementById('connectStage').style.display='flex';
+    setTimeout(function(){
+      if(CONFIG.nextUrl){
+        var sep=CONFIG.nextUrl.indexOf('?')>-1?'&':'?';
+        location.href=CONFIG.nextUrl+sep+"name="+encodeURIComponent(nm);
+      }else{
+        document.getElementById('connectStage').style.display='none';
+        document.getElementById('meetStage').style.display='flex';
+      }
+    },1900);
+  });
+  setTimeout(function(){nameEl.focus();},250);
+})();
+</script>
+
+</body>
+</html>
